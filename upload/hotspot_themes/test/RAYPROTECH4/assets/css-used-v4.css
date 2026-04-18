@@ -1,0 +1,75 @@
+/* v4 Theme */
+
+/* Override Body background color */
+@font-face {
+    font-family: LiAlinurNakkhatraUnicode;
+    src: url('LiAlinurNakkhatraUnicode.woff') format('woff');
+}
+
+body {
+    font-family: LiAlinurNakkhatraUnicode, -apple-system, BlinkMacSystemFont, Fira Sans, Helvetica Neue, Apple Color Emoji, sans-serif;
+    background-color: #e3f2fd !important; /* Light blue background */
+    color: #333 !important; /* Darker text for readability */
+}
+
+/* Override Primary button (Login) color */
+.btn-primary {
+    background-color: #42a5f5 !important; /* Bright blue */
+    border-color: #42a5f5 !important;
+    color: #fff !important;
+    padding: 12px !important;
+    font-size: 1.1rem !important;
+    border-radius: 20px !important; /* Rounded edges for a softer look */
+    width: 100% !important;
+}
+
+.btn-primary:hover {
+    background-color: #1e88e5 !important; /* Darker blue on hover */
+    border-color: #1e88e5 !important;
+}
+
+/* Override Warning button (Package button) color */
+.btn-warning {
+    background-color: #ffca28 !important; /* Soft yellow */
+    border-color: #ffca28 !important;
+    color: #fff !important;
+    padding: 12px !important;
+    font-size: 1.1rem !important;
+    border-radius: 20px !important;
+    width: 100% !important;
+}
+
+.btn-warning:hover {
+    background-color: #ffa000 !important; /* Darker yellow on hover */
+    border-color: #ffa000 !important;
+}
+
+/* Override Tab button styles */
+.tab button {
+    background-color: #29b6f6 !important; /* Light blue for tabs */
+    color: #fff !important;
+    padding: 12px !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-weight: bold !important;
+    width: 50% !important;
+    border-radius: 20px 20px 0 0 !important;
+    transition: background-color 0.3s ease !important;
+}
+
+.tab button:hover {
+    background-color: #039be5 !important; /* Darker blue on hover */
+}
+
+.tab button.active {
+    background-color: #0288d1 !important; /* Dark blue when active */
+    color: #fff !important;
+}
+
+/* Override Form background */
+.auth-form {
+    background-color: #ffffff; /* White form background */
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for a floating effect */
+}

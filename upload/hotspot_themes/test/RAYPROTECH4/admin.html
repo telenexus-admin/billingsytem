@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="-1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Log In </title>
+    <meta name="author" content="MD. Tanjimul Islam">
+    <meta name="description" content="TNR WiFi Managment System">
+    <meta name="theme-color" content="#3063A0">
+    
+	<!-- Minified CSS from all css -->
+    <link rel="stylesheet" href="assets/css-used.css" data-skin="default">
+    <!-- Minified CSS from all css -->
+</head>
+	<body oncontextmenu="return true">
+		$(if chap-id)
+		<form name="sendin" action="$(link-login-only)" method="post" style="display:none">
+			<input type="hidden" name="username" />
+			<input type="hidden" name="password" />
+			<input type="hidden" name="dst" value="$(link-orig)" />
+			<input type="hidden" name="popup" value="true" />
+		</form>
+		
+		<script src="md5.js"></script>
+		
+		<script>
+			function doLogin() {
+            document.sendin.username.value = document.login.username.value;
+            document.sendin.password.value = hexMD5('$(chap-id)' + document.login.password.value + '$(chap-challenge)');
+            document.sendin.submit();
+            return false;
+        }
+			
+		</script>
+		$(endif)
+		<main class="auth">
+			<header id="auth-header" class="auth-header"
+			style="background-image: url(custom/banner.jpg);  background-repeat: no-repeat;background-size: 100% 100%;">
+				
+			</header><!-- form -->
+			<form id="_0xb212x2" class="auth-form" name="login" action="$(link-login-only)" method="post" $(if chap-id) onSubmit="return doLogin()" $(endif)>
+				<input type="hidden" name="dst" value="$(link-orig)" />
+				<input type="hidden" name="popup" value="true" />
+				
+				
+				<div id="_0xb262x4">
+				<!-- .form-group -->
+					<div id="_0xb252x2" class="form-group">
+						<div class="form-label-group">
+							<input onchange="validateToken(this.value);" name="key" type="password" id="key" class="form-control" placeholder="Unlock Key" required>
+							<label for="inputPassword">Unlock Key</label>
+						</div>
+					</div><!-- /.form-group -->
+				</div>
+				
+				
+				<div id="_0xb262x3" style="display:none">
+					<div id="_0xb162x3" class="info $(if error) test $(endif)">
+						$(if error == "")
+						<div class="alert alert-primary has-icon" role="alert">
+							<div class="alert-icon">
+								<span class="fas fa-info"></span>
+							</div>Please log in to use hotspot service
+						</div>
+						$(if trial == 'yes')
+						<div class="alert alert-danger alert-dismissible fade show">
+							Free trial available, <a class="alert-link badge badge-subtle badge-danger"
+							href="$(link-login-only)?dst=$(link-orig-esc)&amp;username=T-$(mac-esc)">click here</a>.
+						</div>
+						$(endif)
+						$(endif)
+						
+						$(if error)
+						<div class="alert alert-danger alert-dismissible fade show"> $(error) </div>
+						$(endif)
+					</div>
+					<!-- .form-group -->
+					<div id="_0xc262x2" class="form-group">
+						<div class="form-label-group">
+							<input type="text" name="username" value="$(username)" id="username" class="form-control"
+							placeholder="Username" autofocus="" required> <label for="inputUser">Username</label>
+						</div>
+					</div><!-- /.form-group -->
+					<!-- .form-group -->
+					<div id="_0xb252x2" class="form-group">
+						<div class="form-label-group">
+							<input name="password" type="password" id="password" class="form-control" placeholder="Password" required>
+							<label for="inputPassword">Password</label>
+						</div>
+					</div><!-- /.form-group -->
+					
+					
+					
+					
+					
+					
+					<!-- .form-group -->
+					<div id="_0xb232x2" class="form-group">
+						<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit" value="Connect" />
+					</div><!-- /.form-group -->
+				</div>
+		</form><!-- /.auth-form -->
+			
+			<!-- 			
+			<footer id="auth-footer" class="auth-footer">
+				<h6>SCC Broadband Internet</h6>
+			</footer>
+			copyright -->
+			
+			
+			<footer id="auth-foote" class="auth-footer footerHead"> © 2021 All Rights Reserved. </footer>
+		</main><!-- /.auth -->
+		<!-- BEGIN TNR JS -->
+		
+		<!-- END TNR -->	
+		
+		<!--- BEGIN THEME JS 
+		<script src="assets/vendor/jquery/jquery.min.js"></script>
+		<script src="assets/vendor/popper.js/umd/popper.min.js"></script>
+		<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script> 
+		
+		
+		<script src="assets/javascript/theme.min.js"></script>
+		END THEME JS -->
+		
+		<script src="admin-aes.js"></script>
+		<script src="admin-key.js"></script>
+		
+	</body>
+</html>

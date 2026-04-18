@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="-1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Log In </title>
+    <meta name="author" content="Tanjimul Islam">
+    <meta name="description" content="TNRSOFT">
+    <meta name="theme-color" content="#03fafd">
+
+    <!-- Minified CSS from all css -->
+    <link rel="stylesheet" href="assets/css-used.css" data-skin="default">
+    <!-- Minified CSS from all css -->
+    <style>
+        @font-face {
+            font-family: SolaimanLipiNormal;
+            src: url(SolaimanLipiNormal.woff);
+        }
+    </style>
+
+    <script type="text/javascript" src="tnr-config.js" charset="utf-8"></script>
+</head>
+
+<body onload="fetchPackageList();">
+
+    $(if chap-id)
+    <form name="sendin" action="$(link-login-only)" method="post" style="display:none">
+        <input type="hidden" name="username" />
+        <input type="hidden" name="password" />
+        <input type="hidden" name="dst" value="$(link-orig)" />
+        <input type="hidden" name="popup" value="true" />
+    </form>
+    <script src="md5.js"></script>
+    <script>
+        function doLogin() {
+            document.sendin.username.value = document.login.username.value;
+            document.sendin.password.value = hexMD5('$(chap-id)' + document.login.password.value + '$(chap-challenge)');
+            document.sendin.submit();
+            return false;
+        }
+    </script>
+    $(endif)
+    <main class="auth">
+        <header id="auth-header" class="auth-header"
+            style="background-image: url(custom/banner.jpg);  background-repeat: no-repeat;background-size: 100% 100%;">
+
+        </header>
+        <!-- form -->
+
+        <div class="auth-form">
+            <div id="requestOverlay" style="display: none;" class="request-overlay"></div>
+            <div class="tab" id="tab">
+
+
+                <button class="tablinks" onclick="openLogin(event, '_0xb262x4')">পেমেন্ট/কার্ড</button>
+                <button class="tablinks" onclick="openLogin(event, '_0xb262x3')">লগ ইন </button>
+                <button class="tablinks" onclick="openLogin(event, 'package_block')" id="defaultOpen"> প্যাকেজ </button>
+
+            </div>
+
+            <form id="_0xb262x3" class="tabcontent" class="auth-form" name="login" action="$(link-login-only)"
+                method="post" $(if chap-id) onSubmit="return doLogin()" $(endif)>
+                <input type="hidden" name="dst" value="$(link-orig)" />
+                <input type="hidden" name="popup" value="true" />
+                <div>
+                    <br>
+                    <div id="_0xb162x3" class="info $(if error) test $(endif)">
+                        $(if error == "")
+                        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+							দয়া করে আপনার Username এবং Password প্রবেশ করান
+                        </div>
+                        $(if trial == 'yes')
+                        <div class="alert alert-danger alert-dismissible fade show">
+								২ মিনিট ফ্রি চালাতে এখানে, 
+							<a class="alert-link badge badge-subtle badge-danger" href="$(link-login-only)?dst=$(link-orig-esc)&amp;username=T-$(mac-esc)">
+								ক্লিক করুন
+							</a>.
+                        </div>
+                        $(endif) $(endif) $(if error)
+
+                        <div class="alert alert-danger alert-dismissible fade show"> $(error) </div>
+                        $(endif)
+                    </div>
+                    <!-- .form-group -->
+                    <div id="_0xc262x2" class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" name="username" value="$(username)" id="username" class="form-control"
+                                placeholder="Username" autofocus="" required>
+                            <label for="inputUser">Username</label>
+                        </div>
+                    </div>
+                    <!-- /.form-group -->
+                    <!-- .form-group -->
+                    <div id="_0xb252x2" class="form-group">
+                        <div class="form-label-group">
+                            <input name="password" type="password" id="password" class="form-control"
+                                placeholder="Password" required>
+                            <label for="inputPassword">Password</label>
+                        </div>
+                    </div>
+                    <!-- /.form-group -->
+                    <!-- .form-group -->
+                    <div id="_0xb232x2" class="form-group">
+                        <input class="btn btn-lg btn-primary btn-block" type="submit" id="submit" value=" লগ ইন করুন" />
+                    </div>
+                    <!-- /.form-group -->
+                </div>
+            </form>
+
+            <form onSubmit="" id="_0xb262x4" class="tabcontent" onSubmit="return mobileNovalidate(mobileNo.value);" class="auth-form"
+                name="subForm" action="nothing" method="post" autocomplete="on">
+                <br>
+
+                <h6 align="center" class="alert-heading">নতুন প্যাকেজ কিনতে চাইলে পেমেন্ট/কার্ড রিচার্জ করুন </h6>
+                <div id="_0xb262x41" class="form-actions">
+                    <input for="subForm" type="search" id="mobileNo" required="" name="mobileNo" value="$(username)"
+                        class="form-control mr-3 mb-3" placeholder="আপনার মোবাইল নম্বরটি লিখুন">
+                    <button for="subForm" type="submit" class="btn btn-warning text-nowrap ml-auto">প্যাকেজ কিনুন</button>
+                </div>
+            </form>
+
+            <form id="package_block" class="tabcontent" class="auth-form">
+                <br>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> Speed </th>
+                            <th class="text-center"> Validity </th>
+                            <th class="text-center"> Price </th>
+                            <th class="text-center"> User </th>
+                        </tr>
+                    </thead>
+                    <tbody id="package_list"></tbody>
+                </table>
+                <br>
+            </form>
+
+            <div class="form-group">
+                <h6 align="center" class="alert-heading">যোগাযোগ করুন</h6>
+                <div class="col-md-12">
+                    <div style="line-height: 2;">
+                        <div align="center">
+                            <div id="phone1"></div>
+                            <div id="phone2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+    <!-- /.auth -->
+    <!-- BEGIN TNR JS -->
+
+
+	<script src="processor.js"></script>
+	  
+	<script src="login-required-unprotected.js"></script>
+
+
+    <!--END TNR -->
+
+</body>
+
+</html>

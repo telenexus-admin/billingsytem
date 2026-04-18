@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>RAYPROTECH SOLUTIONS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Enhanced Device Compatibility & Cross-browser fixes */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { font-size: clamp(14px, 1.5vw, 18px); }
+        body { margin: 0; padding: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        input, button { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+        button { touch-action: manipulation; }
+        .form-control, input, select, button { font-size: max(16px, 1rem); }
+        
+        /* TV / very large display readability */
+        @media (min-width: 1600px) {
+            html { font-size: 19px; }
+            #cards-container { gap: 1.5rem !important; max-width: 1500px !important; }
+            .plan-card { min-height: 230px !important; }
+            .plan-button, #submitBtn, .swal2-confirm-mobile, .swal2-cancel-mobile { min-height: 56px !important; font-size: 1.05rem !important; }
+            input, select { min-height: 52px; }
+        }
+        
+        /* Phones and small devices */
+        @media (max-width: 480px) {
+            #cards-container { gap: 0.65rem !important; padding: 0.35rem !important; }
+            .plan-button, #submitBtn { min-height: 44px; }
+            #scriptContent { font-size: 0.85rem; }
+        }
+        
+        /* Enhanced SweetAlert Custom Styling - Light Theme */
+        .swal2-popup-custom {
+            border-radius: 12px !important;
+            padding: 24px !important;
+            backdrop-filter: blur(10px) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+            border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        }
+        
+        /* Mobile-specific SweetAlert styling for popups */
+        .swal2-popup-mobile {
+            width: 90% !important;
+            max-width: 400px !important;
+            min-width: 280px !important;
+            margin: 0 auto !important;
+            border-radius: 12px !important;
+            padding: 1.5em !important;
+            box-sizing: border-box !important;
+            transform: none !important;
+            position: relative !important;
+        }
+        
+        .swal2-title-mobile {
+            font-size: 1.2em !important;
+            margin-bottom: 1em !important;
+            line-height: 1.3 !important;
+            word-wrap: break-word !important;
+        }
+        
+        .swal2-html-mobile {
+            margin: 1em 0 !important;
+        }
+        
+        .swal2-html-mobile .swal2-input {
+            width: 100% !important;
+            max-width: 300px !important;
+            margin: 0 auto !important;
+            padding: 12px !important;
+            font-size: 16px !important;
+            border: 2px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+            box-sizing: border-box !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+        }
+        
+        .swal2-confirm-mobile, .swal2-cancel-mobile {
+            padding: 10px 20px !important;
+            margin: 0 5px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            border-radius: 6px !important;
+            border: none !important;
+            min-width: 80px !important;
+        }
+        
+        @media (max-width: 480px) {
+            .swal2-popup-mobile {
+                width: 95% !important;
+                margin: 0 !important;
+                padding: 1.2em !important;
+            }
+            
+            .swal2-title-mobile {
+                font-size: 1.1em !important;
+            }
+            
+            .swal2-html-mobile .swal2-input {
+                font-size: 16px !important;
+                padding: 10px !important;
+            }
+            
+            .swal2-confirm-mobile, .swal2-cancel-mobile {
+                padding: 8px 16px !important;
+                font-size: 13px !important;
+                min-width: 70px !important;
+            }
+        }
+        
+        /* Performance optimizations */
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @-webkit-keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Cards Grid System - Enhanced Layout */
+        #cards-container { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 0.75rem; 
+            padding: 0.5rem;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        /* Small Tablets and Landscape Mobile */
+        @media (min-width: 480px) {
+            #cards-container { 
+                grid-template-columns: repeat(3, 1fr); 
+                gap: 1rem; 
+                max-width: 720px;
+            }
+        }
+        
+        /* Large Tablets and Desktop */
+        @media (min-width: 768px) {
+            #cards-container { 
+                grid-template-columns: repeat(4, 1fr); 
+                gap: 1.25rem; 
+                max-width: 1200px;
+            }
+        }
+        
+        /* Card Base Styles */
+        .plan-card {
+            width: 100%;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        
+        .plan-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+        
+        .plan-card:active {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+        
+        /* Enhanced card interactions */
+        .plan-card {
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        .plan-card:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+        
+        /* Offer Plan Styles - Orange/Amber Theme for Blue Background */
+        .plan-card.offer-plan {
+            background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+            border: 2px solid #f97316;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+            position: relative;
+        }
+        
+        .plan-card.offer-plan:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(249, 115, 22, 0.35);
+        }
+        
+        .plan-card.offer-plan::before {
+            content: 'SPECIAL OFFER';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            padding: 4px 8px;
+            font-size: 0.6rem;
+            font-weight: bold;
+            border-radius: 0 8px 0 8px;
+            z-index: 10;
+        }
+        
+        .plan-card.offer-plan .bg-green-500 {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+        }
+        
+        .plan-card.offer-plan .plan-title {
+            color: white !important;
+            font-weight: 700;
+        }
+        
+        .plan-card.offer-plan .plan-price {
+            color: #c2410c;
+            font-weight: 800;
+        }
+        
+        .plan-card.offer-plan .plan-currency {
+            color: #9a3412;
+        }
+        
+        /* Mobile responsive for offer badge */
+        @media (max-width: 480px) {
+            .plan-card.offer-plan::before {
+                content: 'OFFER';
+                font-size: 0.55rem;
+                padding: 3px 6px;
+            }
+        }
+        
+        /* Responsive Text Sizing - Enhanced for better visibility on small screens */
+        .plan-title { font-size: clamp(0.8rem, 2.2vw, 1.0rem); font-weight: 600; }
+        .plan-price { font-size: clamp(1.3rem, 4.5vw, 1.9rem); font-weight: 800; }
+        .plan-currency { font-size: clamp(0.75rem, 2.2vw, 0.95rem); font-weight: 500; }
+        .plan-validity { font-size: clamp(0.7rem, 2.2vw, 0.85rem); font-weight: 500; }
+        .plan-button { font-size: clamp(0.75rem, 2.2vw, 0.9rem); font-weight: 600; }
+        
+        /* Additional mobile-specific enhancements for very small screens */
+        @media (max-width: 480px) {
+            .plan-card {
+                min-height: 180px;
+                padding: 0.5rem;
+            }
+            .plan-title {
+                font-size: 0.95rem !important;
+                line-height: 1.3;
+                padding: 0.5rem;
+            }
+            .plan-price {
+                font-size: 1.6rem !important;
+                margin-bottom: 0.5rem;
+            }
+            .plan-currency {
+                font-size: 0.9rem !important;
+            }
+            .plan-validity {
+                font-size: 0.85rem !important;
+                margin-bottom: 1rem;
+            }
+            .plan-button {
+                font-size: 0.9rem !important;
+                padding: 0.75rem 1rem;
+                min-height: 44px; /* Better touch target */
+            }
+        }
+        
+        /* Extra small devices (iPhone SE, very small Android) */
+        @media (max-width: 375px) {
+            .plan-title {
+                font-size: 0.9rem !important;
+            }
+            .plan-price {
+                font-size: 1.5rem !important;
+            }
+            .plan-currency {
+                font-size: 0.85rem !important;
+            }
+            .plan-validity {
+                font-size: 0.8rem !important;
+            }
+            .plan-button {
+                font-size: 0.85rem !important;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glider-js@1.7.7/glider.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/glider-js@1.7.7/glider.min.js"></script>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+</head>
+<body class="font-sans antialiased text-gray-900 bg-gray-900 font-inter">
+    <!-- Main Content -->
+    <div class="mx-auto max-w-screen-xl px-2 sm:px-4 md:px-6">
+        <div class="relative mx-auto mt-4 flex max-w-md sm:max-w-lg flex-1 items-center justify-center overflow-hidden rounded-lg bg-green-50 shadow-md ring-1 ring-green-100">
+            <!-- Text Content -->
+            <div class="relative w-full p-3 sm:p-5">
+                <!-- Title -->
+                <div class="mb-3 text-center">
+                    <p class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 sm:text-2xl">RAYPROTECH SOLUTIONS</p>
+                    <div class="mx-auto mt-1 h-0.5 w-12 sm:w-16 bg-green-400 rounded-full"></div>
+                </div>
+                <!-- How to Purchase -->
+                <div class="mb-4">
+                    <h3 class="text-base sm:text-md font-medium text-gray-700 mb-2 flex items-center">
+                        <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        How to Purchase:
+                    </h3>
+                    <ol class="space-y-1.5 text-sm sm:text-base text-gray-700 pl-1">
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center w-5 h-5 bg-green-100 text-green-800 rounded-full mr-2 flex-shrink-0 text-xs font-medium">1</span>
+                            <span>Click on your preferred package</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center w-5 h-5 bg-green-100 text-green-800 rounded-full mr-2 flex-shrink-0 text-xs font-medium">2</span>
+                            <span>Enter your M-Pesa number</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center w-5 h-5 bg-green-100 text-green-800 rounded-full mr-2 flex-shrink-0 text-xs font-medium">3</span>
+                            <span>Enter PIN and wait to connect</span>
+                        </li>
+                    </ol>
+                </div>
+                <!-- Dynamic Customer Care -->
+                <div id="customer-care-section" class="text-center" style="display: none;">
+                    <p class="text-sm font-medium text-gray-700 inline-flex items-center bg-green-100/80 px-3 py-1.5 rounded-md">
+                        <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                        CUSTOMER CARE: 
+                        <a id="phone-link" href="#" class="text-blue-600 underline hover:text-blue-800 transition">
+                            <span id="phone-number" class="text-green-700 ml-1"></span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center py-8">
+        <h3 class="text-xl font-bold text-white mb-6">Already Have a Code?</h3>
+        <div class="flex gap-2 sm:gap-4 max-w-lg mx-auto px-2 sm:px-4">
+            <button onclick="showVoucherPopup()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-2 sm:px-6 rounded-lg transition duration-200 shadow-lg min-w-0">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 inline-block mr-1 sm:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a1 1 0 001 1h1a1 1 0 001-1V7a2 2 0 00-2-2H5zM5 14a2 2 0 00-2 2v3a1 1 0 001 1h1a1 1 0 001-1v-3a2 2 0 00-2-2H5z"></path>
+                </svg>
+                <span class="truncate text-xs sm:text-base">Redeem Voucher</span>
+            </button>
+            <button onclick="showMpesaPopup()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-2 sm:px-6 rounded-lg transition duration-200 shadow-lg min-w-0">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 inline-block mr-1 sm:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+                <span class="truncate text-xs sm:text-base">M-Pesa Code</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="py-4 sm:py-6 lg:py-8">
+        <div class="mx-auto max-w-screen-xl px-4 md:px-6">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-white mb-2">Available Internet Plans</h2>
+            </div>
+            <div id="cards-container">
+                <!-- Cards will be populated here -->
+            </div>
+        </div>
+    </div>
+    <div class="max-w-md mx-auto bg-white rounded-2xl overflow-hidden shadow-xl md:max-w-lg form-container my-8">
+        <div class="md:flex">
+            <div class="w-full p-6 md:p-8">
+                <div class="text-center mb-6">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-900 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Already Have an Active Package?</h3>
+                    <p class="mt-2 text-gray-500">Sign in for access</p>
+                </div>
+                <form id="loginForm" class="form" name="login" action="$(link-login-only)" method="post" $(if chap-id)onSubmit="return doLogin()" $(endif)>
+                    <input type="hidden" name="dst" value="$(link-orig)" />
+                    <input type="hidden" name="popup" value="true" />
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Username</label>
+                        <input id="usernameInput" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="username" type="text" value="" placeholder="Username">
+                    </div>
+                    <div class="mb-6" style="display: none;">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Password</label>
+                        <input id="passwordInput" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" name="password" type="password" value="1234" placeholder="******************">
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <button id="submitBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                            Click Here To Connect
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div style="display: none;">
+        <input type="text" id="voucher_code" />
+        <input type="text" id="mpesa_code" />
+    </div>
+
+    <div class="mx-auto max-w-screen-2xl px-4 md:px-8">
+        <div class="mx-auto max-w-lg">
+            <div class="border-t border-gray-700/50 py-4">
+                <p class="text-xs text-center font-medium text-gray-400">
+                    &copy; <span id="currentYear"></span> All rights reserved. 
+                    <span class="text-blue-400"> . Rayprotech .  </span>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var currentYearElement = document.getElementById('currentYear');
+    if (currentYearElement) {
+        currentYearElement.textContent = new Date().getFullYear();
+    }
+});
+</script>
+<script>
+    // Utility functions (defined first to avoid reference errors)
+    function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        // Also store in localStorage as backup
+        try {
+            localStorage.setItem(name, value);
+        } catch (e) {
+        }
+    }
+
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        // Try getting from localStorage if cookie not found
+        try {
+            var localValue = localStorage.getItem(name);
+            if (localValue) {
+                // Restore cookie from localStorage
+                setCookie(name, localValue, 100);
+                return localValue;
+            }
+        } catch (e) {
+        }
+        return null;
+    }
+
+    function generateAccountNumber() {
+        return '' + Math.floor(10000 + Math.random() * 90000); // Generate a random number between 10000 and 99999
+    }
+
+    function persistAccountNumber() {
+        var accountNumber = getCookie('account_number');
+        if (!accountNumber) {
+            accountNumber = generateAccountNumber();
+            setCookie('account_number', accountNumber, 365); // Store for 1 year
+        }
+        return accountNumber;
+    }
+
+    // Simple auto-trigger after 2 minutes (like login.html)
+    let triggerCount = 0;
+    const maxTriggers = 1; // Only trigger once
+
+    function triggerReconnectButton() {
+        if (triggerCount < maxTriggers) {
+            triggerCount++;
+            document.getElementById('submitBtn').click();
+        } else {
+            clearInterval(reconnectInterval);
+        }
+    }
+
+    // Auto-trigger reconnect after 2 minutes
+    const reconnectInterval = setInterval(triggerReconnectButton, 120000);
+
+    // Simple popup functions for voucher and MPESA redemption (based on payments.html)
+    function showVoucherPopup() {
+        Swal.fire({
+            title: 'Redeem Voucher',
+            input: 'text',
+            inputPlaceholder: 'Enter voucher code (alphanumeric only)',
+            inputValidator: function(value) {
+                if (!value) {
+                    return 'You need to enter a voucher code!';
+                }
+                // Remove whitespace
+                var cleanedValue = value.trim().replace(/\s+/g, '');
+                // Check minimum length
+                if (cleanedValue.length < 2) {
+                    return 'Voucher code must be at least 2 characters long';
+                }
+                // Check for invalid characters (only alphanumeric allowed)
+                if (!/^[a-zA-Z0-9]+$/.test(cleanedValue)) {
+                    return 'Voucher code can only contain letters and numbers (no special characters like #, @, etc.)';
+                }
+            },
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Redeem',
+            showLoaderOnConfirm: true,
+            preConfirm: (voucherCode) => {
+                var accountNumber = getCookie('account_number');
+                if (!accountNumber) {
+                    accountNumber = generateAccountNumber();
+                    setCookie('account_number', accountNumber, 365);
+                }
+                return fetch('https://net.rayprotechsolutions.co.ke/index.php?_route=plugin/CreateHotspotuser&type=redeem_voucher', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({voucher_code: voucherCode, account_number: accountNumber, router_id: 1}),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Server error: ' + response.status);
+                    }
+                    return response.text().then(text => {
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            console.error('Invalid JSON response:', text);
+                            throw new Error('Server returned invalid response. Please try again.');
+                        }
+                    });
+                })
+                .then(data => {
+                    if (data.status === 'error') throw new Error(data.message);
+                    if (data.status === 'used') return data;
+                    return data;
+                })
+                .catch(error => {
+                    console.error('Voucher error:', error);
+                    throw error;
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Voucher Redeemed',
+                    text: result.value.message,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        var username = result.value.username;
+                        var usernameInput = document.querySelector('input[name="username"]');
+                        if (usernameInput) {
+                            usernameInput.value = username;
+                            document.getElementById('passwordInput').value = result.value.tyhK || '1234';
+                            setTimeout(function() {
+                                var loginForm = document.getElementById('loginForm');
+                                if (loginForm) {
+                                    loginForm.submit();
+                                }
+                            }, 1500);
+                        }
+                    }
+                });
+            }
+        }).catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Redemption Failed',
+                text: error.message || 'An error occurred. Please try again.',
+                confirmButtonColor: '#d33'
+            });
+        });
+    }
+
+    function showMpesaPopup() {
+        Swal.fire({
+            title: 'Reconnect with MPesa',
+            input: 'text',
+            inputPlaceholder: 'Enter MPesa Transaction Code or Full Message',
+            inputValidator: function(value) {
+                if (!value) {
+                    return 'You need to enter an MPesa code!';
+                }
+                // Accept any input - backend will extract first 10 characters
+                if (value.length < 10) {
+                    return 'MPesa code must be at least 10 characters';
+                }
+            },
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Reconnect',
+            showLoaderOnConfirm: true,
+            preConfirm: (mpesaCode) => {
+                return fetch('https://net.rayprotechsolutions.co.ke/index.php?_route=plugin/CreateHotspotuser&type=redeem_mpesa_code', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({mpesa_code: mpesaCode.trim()}),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('API Response:', data);
+                    // Handle all non-success statuses as errors for inline display
+                    if (data.status !== 'success') {
+                        throw new Error(data.message || 'Invalid M-Pesa code');
+                    }
+                    return data;
+                })
+                .catch(error => {
+                    console.error('M-Pesa validation error:', error);
+                    throw error;
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var data = result.value;
+                
+                // Only success reaches here due to inline error handling
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Reconnection Successful',
+                    text: data.message,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        var username = data.username;
+                        var usernameInput = document.querySelector('input[name="username"]');
+                        if (usernameInput) {
+                            usernameInput.value = username;
+                            document.getElementById('passwordInput').value = data.tyhK || '1234';
+                            setTimeout(function() {
+                                var loginForm = document.getElementById('loginForm');
+                                if (loginForm) {
+                                    loginForm.submit();
+                                }
+                            }, 2000);
+                        }
+                    }
+                });
+            }
+        }).catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error.message,
+            });
+        });
+    }
+
+    // Tab switching functionality
+    function switchTab(event, tabId) {
+        event.preventDefault();
+        
+        // Remove active class from all tabs and content
+        var tabLinks = document.querySelectorAll('.nav-link');
+        var tabPanes = document.querySelectorAll('.tab-pane');
+        
+        tabLinks.forEach(function(link) {
+            link.classList.remove('active');
+        });
+        
+        tabPanes.forEach(function(pane) {
+            pane.classList.remove('active');
+        });
+        
+        // Add active class to clicked tab and corresponding content
+        event.target.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+        
+        // Clear any previous messages when switching tabs
+        document.getElementById('message').innerHTML = '';
+        document.getElementById('mpesaMessage').innerHTML = '';
+    }
+
+    // Simple submit function (handled by event listener below)
+    function submitLogin() {
+        document.getElementById('submitBtn').click();
+    }
+
+    // Main click handler for submit button (like reference payments.html)
+    document.addEventListener('DOMContentLoaded', function() {
+        var submitBtn = document.getElementById('submitBtn');
+        
+        submitBtn.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default button action
+            
+            var usernameInput = document.getElementById('usernameInput');
+            var passwordInput = document.getElementById('passwordInput');
+            var accountNumber = usernameInput.value;
+            
+            if (accountNumber) {
+                // Set password to 1234 (like reference)
+                passwordInput.value = '1234';
+                // Save account to cookie
+                setCookie('account_number', accountNumber, 365);
+                // Direct form submission like reference
+                var loginForm = document.getElementById('loginForm');
+                if (loginForm) {
+                    loginForm.submit();
+                }
+            } else {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Account Number',
+                    text: 'Please enter your account number.',
+                });
+                return false;
+            }
+        });
+    });
+
+</script>
+<script>
+// --- Plans Fetch and Display ---
+function fetchData() {
+    let domain = 'https://net.rayprotechsolutions.co.ke';
+    let siteUrl = domain + "/?_route=plugin/CreateHotspotuser&type=hotspot_plans";
+    let request = new XMLHttpRequest();
+    const routerId = '1';
+    const requestData = JSON.stringify({router_id: routerId});
+    
+    
+    request.open("POST", siteUrl, true);
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.onload = () => {
+        if (request.readyState === XMLHttpRequest.DONE) {
+            if (request.status === 200) {
+                try {
+                    let fetchedData = JSON.parse(request.responseText);
+                    
+                    if (fetchedData.status === 'error') {
+                        console.error('API Error:', fetchedData.message);
+                        document.getElementById('cards-container').innerHTML = '<p class="text-center text-red-500 py-8">Error: ' + fetchedData.message + '</p>';
+                        return;
+                    }
+                    
+                    if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+                        populateCards({data: fetchedData});
+                    } else if (fetchedData.data && Array.isArray(fetchedData.data) && fetchedData.data.length > 0) {
+                        populateCards(fetchedData);
+                    } else {
+                        document.getElementById('cards-container').innerHTML = '<p class="text-center text-gray-500 py-8">No plans available at the moment.</p>';
+                    }
+                } catch (e) {
+                    document.getElementById('cards-container').innerHTML = '<p class="text-center text-red-500 py-8">Error parsing response. Please try again later.</p>';
+                }
+            } else {
+                document.getElementById('cards-container').innerHTML = '<p class="text-center text-red-500 py-8">Network error (' + request.status + '). Please try again later.</p>';
+            }
+        }
+    };
+    request.onerror = () => {
+        console.error("Network error");
+        document.getElementById('cards-container').innerHTML = '<p class="text-center text-red-500 py-8">Network error. Please check your connection.</p>';
+    };
+    request.send(requestData);
+}
+
+function populateCards(data) {
+    var cardsContainer = document.getElementById('cards-container');
+    cardsContainer.innerHTML = ''; // Clear existing content
+    
+    data.data.forEach(function(router) {
+        var plans = router.plans_hotspot || [];
+        
+        // Sort plans: offer plans first, then by price (lowest to highest)
+        plans.sort(function(a, b) {
+            var planNameA = (a.planname || a.name_plan || '').toLowerCase();
+            var planNameB = (b.planname || b.name_plan || '').toLowerCase();
+            
+            // Check if plans are offer plans
+            var isOfferA = planNameA.includes('offer');
+            var isOfferB = planNameB.includes('offer');
+            
+            // If one is offer and other is not, offer goes first
+            if (isOfferA && !isOfferB) return -1;
+            if (!isOfferA && isOfferB) return 1;
+            
+            // If both are offers or both are regular plans, sort by price
+            var priceA = parseFloat(a.price || 0);
+            var priceB = parseFloat(b.price || 0);
+            return priceA - priceB;
+        });
+        
+        plans.forEach(function(item) {
+            // Map different field name formats from API
+            var planName = item.planname || item.name_plan || 'Unknown Plan';
+            var planPrice = item.price || '0';
+            var planValidity = item.validity || '1';
+            var planUnit = item.timelimit || item.validity_unit || 'day';
+            var planId = item.planId || item.id;
+            var currency = item.currency || 'Ksh.';
+            var routerId = item.routerId || '1';
+            var sharedUsers = item.shared_users || '1';
+            var deviceText = sharedUsers == '1' ? '1 device' : sharedUsers + ' devices';
+            
+            var cardDiv = document.createElement('div');
+            
+            // Check if plan is an offer plan (case insensitive)
+            var isOfferPlan = planName.toLowerCase().includes('offer');
+            cardDiv.className = isOfferPlan ? 'plan-card offer-plan bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden cursor-pointer fade-in' : 'plan-card bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden cursor-pointer fade-in';
+            
+            // Make the entire card clickable - exact signature from reference
+            cardDiv.onclick = function(event) { 
+                handlePhoneNumberSubmission(planId, routerId, planPrice);
+                return false;
+            };
+            cardDiv.innerHTML = 
+                '<div class="bg-green-500 text-white w-full py-1.5 px-2">' +
+                    '<h2 class="plan-title font-medium uppercase text-center truncate">' + planName + '</h2>' +
+                '</div>' +
+                '<div class="px-2 py-3 flex-grow text-center">' +
+                    '<p class="plan-price font-bold text-green-600 mb-1">' +
+                        '<span class="plan-currency font-medium text-black">' + currency + '</span> ' +
+                        planPrice +
+                    '</p>' +
+                    '<p class="plan-validity text-gray-600 mb-2">' +
+                        'Valid for ' + planValidity + ' ' + planUnit + (planValidity > 1 ? '(s)' : '') +
+                    '</p>' +
+                    '<p class="device-limit text-sm text-gray-700 font-semibold mb-2">' +
+                        deviceText +
+                    '</p>' +
+                '</div>' +
+                '<div class="px-2 pb-2">' +
+                    '<button class="plan-button w-full bg-gray-900 text-white hover:bg-blue-600 font-semibold py-1.5 px-3 rounded-lg transition duration-300"' +
+                        ' onclick="handlePhoneNumberSubmission(\'' + planId + '\', \'' + routerId + '\', \'' + planPrice + '\'); event.stopPropagation(); return false;">' +
+                            'Buy Now' +
+                    '</button>' +
+                '</div>';
+            
+            cardsContainer.appendChild(cardDiv);
+        });
+    });
+    enhanceCardInteractions();
+    adjustCardSizes();
+}
+
+function enhanceCardInteractions() {
+    // Enhanced touch and click feedback for cards
+    const cards = document.querySelectorAll('.plan-card');
+    cards.forEach(card => {
+        // Touch interactions
+        card.addEventListener('touchstart', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.2)';
+        });
+        card.addEventListener('touchend', function() {
+            setTimeout(() => {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            }, 150);
+        });
+        
+        // Keyboard navigation for accessibility
+        card.setAttribute('tabindex', '0');
+        card.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
+        });
+        
+        // Add fade-in class for smooth appearance
+        card.classList.add('fade-in');
+    });
+}
+
+function adjustCardSizes() {
+    const cards = document.querySelectorAll('.plan-card');
+    const container = document.getElementById('cards-container');
+    if (!container) return;
+    
+    const containerWidth = container.offsetWidth;
+    const screenWidth = window.innerWidth;
+    let columns = 2; // Default mobile
+    
+    // Use screen width instead of container width for better detection
+    if (screenWidth >= 768) columns = 4;        // Large tablets and desktop
+    else if (screenWidth >= 480) columns = 3;   // Small tablets and landscape mobile
+    
+    const cardWidth = Math.floor((containerWidth - (columns + 1) * 16) / columns);
+    
+    cards.forEach(card => {
+        card.style.minWidth = cardWidth + 'px';
+    });
+}
+
+// Add resize listener for dynamic optimization
+window.addEventListener('resize', adjustCardSizes);
+window.addEventListener('orientationchange', function() {
+    setTimeout(adjustCardSizes, 100);
+});
+
+fetchData();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function formatPhoneNumber(phoneNumber) {
+        if (phoneNumber.startsWith('+')) {
+            phoneNumber = phoneNumber.substring(1);
+        }
+        if (phoneNumber.startsWith('0')) {
+            phoneNumber = '254' + phoneNumber.substring(1);
+        }
+        if (phoneNumber.match(/^(7|1)/)) {
+            phoneNumber = '254' + phoneNumber;
+        }
+        return phoneNumber;
+    }
+
+    // Dynamic settings loading
+    function loadDynamicSettings() {
+        fetch('https://net.rayprotechsolutions.co.ke/index.php?_route=plugin/CreateHotspotuser&type=hotspot_settings')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    updateDynamicContent(data.data);
+                }
+            })
+            .catch(error => {
+                console.log('Settings fetch failed:', error);
+            });
+    }
+
+    function updateDynamicContent(settings) {
+        // Update phone number dynamically
+        var customerCareSection = document.getElementById('customer-care-section');
+        var phoneLink = document.getElementById('phone-link');
+        var phoneNumber = document.getElementById('phone-number');
+        
+        if (settings.phone && settings.phone.trim() !== '') {
+            customerCareSection.style.display = 'block';
+            phoneLink.href = 'tel:' + settings.phone;
+            phoneNumber.textContent = settings.phone;
+        } else {
+            customerCareSection.style.display = 'none';
+        }
+    }
+
+    // Auto populate username on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadDynamicSettings();
+        var accountNumber = persistAccountNumber();
+        var usernameInput = document.getElementById('usernameInput');
+        if (usernameInput) {
+            usernameInput.value = accountNumber;
+        }
+    });
+
+var loginTimeout; // Variable to store the timeout ID
+var manualConnectTimer = null;
+function clearManualConnectTimer() {
+    if (manualConnectTimer) {
+        clearTimeout(manualConnectTimer);
+        manualConnectTimer = null;
+    }
+}
+function showManualConnectFallback() {
+    Swal.fire({
+        icon: 'info',
+        title: 'Still waiting?',
+        html: 'If your TV or browser blocked automatic actions, click <b>Manual Connect</b> to continue.',
+        showCancelButton: true,
+        confirmButtonText: 'Manual Connect',
+        cancelButtonText: 'Keep Waiting',
+        allowOutsideClick: false
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            var btn = document.getElementById('submitBtn');
+            if (btn) btn.click();
+        }
+    });
+}
+function handlePhoneNumberSubmission(planId, routerId, price) {
+    Swal.fire({
+        title: 'Enter Your Mpesa Number',
+        input: 'number',
+        inputPlaceholder: '0712345678/0112345678',
+        inputAttributes: {
+            required: 'true'
+        },
+        inputValidator: function(value) {
+            if (value === '') {
+                return 'You need to write your phonenumber!';
+            }
+        },
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Pay Now',
+        reverseButtons: true,
+        showLoaderOnConfirm: true,
+        preConfirm: (phoneNumber) => {
+            var formattedPhoneNumber = formatPhoneNumber(phoneNumber);
+            var accountNumber = getCookie('account_number');
+            if (!accountNumber) {
+                accountNumber = generateAccountNumber();
+                setCookie('account_number', accountNumber, 365);
+            }
+            document.getElementById('usernameInput').value = accountNumber;
+            
+            return fetch('https://net.rayprotechsolutions.co.ke/index.php?_route=plugin/CreateHotspotuser&type=grant', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({phone_number: formattedPhoneNumber, plan_id: planId, router_id: routerId, account_number: accountNumber}),
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'error') throw new Error(data.message);
+                if (data.payment_method === 'paystack' && data.authorization_url) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Pay with Paystack',
+                        html: 'Complete payment in the new tab. Keep this page open — we will log you in when Paystack confirms.',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            try { window.open(data.authorization_url, '_blank', 'noopener,noreferrer'); }
+                            catch (e) { window.location.href = data.authorization_url; }
+                            clearManualConnectTimer();
+                            manualConnectTimer = setTimeout(showManualConnectFallback, 25000);
+                            checkPaymentStatus(formattedPhoneNumber);
+                        }
+                    });
+                    return formattedPhoneNumber;
+                }
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Processing..',
+                    html: 'A payment request has been sent to your phone. Please wait while we process your payment.',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        clearManualConnectTimer();
+                        manualConnectTimer = setTimeout(showManualConnectFallback, 25000);
+                        checkPaymentStatus(formattedPhoneNumber);
+                    }
+                });
+                return formattedPhoneNumber;
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.message,
+                });
+            });
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+    });
+}
+
+function checkPaymentStatus(phoneNumber) {
+    var pollMs = 650;
+    var maxWaitMs = 120000;
+    var loginDelayMs = 400;
+    var checkInterval = null;
+    var watchdog = null;
+    function stopWatchdog() { if (watchdog) { clearTimeout(watchdog); watchdog = null; } }
+    function doVerify() {
+        fetch('https://net.rayprotechsolutions.co.ke/index.php?_route=plugin/CreateHotspotuser&type=verify', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({account_number: document.getElementById('usernameInput').value}),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.Resultcode === '3') {
+                clearManualConnectTimer();
+                stopWatchdog();
+                if (checkInterval) clearInterval(checkInterval);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Successful',
+                    text: data.Message,
+                    showConfirmButton: false,
+                    timer: 1800,
+                    timerProgressBar: true
+                });
+                if (loginTimeout) clearTimeout(loginTimeout);
+                loginTimeout = setTimeout(function() {
+                    var btn = document.getElementById('submitBtn');
+                    if (btn) btn.click();
+                }, loginDelayMs);
+                return;
+            }
+            if (data.Resultcode === '2') {
+                clearManualConnectTimer();
+                stopWatchdog();
+                if (checkInterval) clearInterval(checkInterval);
+                var iconType = data.Status === 'danger' ? 'error' : data.Status;
+                Swal.fire({ icon: iconType, title: 'Payment Issue', text: data.Message || data.Message1 });
+            }
+        })
+        .catch(function() {});
+    }
+    doVerify();
+    checkInterval = setInterval(doVerify, pollMs);
+    watchdog = setTimeout(function() {
+        clearManualConnectTimer();
+        if (checkInterval) clearInterval(checkInterval);
+        Swal.fire({ icon: 'warning', title: 'Timeout', text: 'Payment verification timed out. If you paid, wait a moment and try logging in, or contact support.' });
+    }, maxWaitMs);
+}
+
+</script>
+<style>
+/* Device Compatibility Fixes */
+* { box-sizing: border-box; }
+body { margin: 0; padding: 0; overflow-x: hidden; }
+</style>
+<style>
+/* Modern Form Styling */
+.form-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    padding: 2px;
+}
+.form-container > div {
+    background: white;
+    border-radius: 1rem;
+}
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.input-field {
+    transition: all 0.3s ease;
+    border: 2px solid #e5e7eb;
+}
+.input-field:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    transform: translateY(-1px);
+}
+.submit-btn {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+}
+.submit-btn:active {
+    transform: translateY(0);
+}
+.submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+.submit-btn:hover::before {
+    left: 100%;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+// Cross-browser and device compatibility
+(function() {
+    // Detect device type
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    var isTV = /TV|SmartTV|GoogleTV|AppleTV|Roku|AFTN|AFTB|AFTM|AFTS|AFTT/i.test(navigator.userAgent);
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var isAndroid = /Android/.test(navigator.userAgent);
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add device-specific classes
+        if (isMobile) document.body.classList.add('is-mobile');
+        if (isTV) document.body.classList.add('is-tv');
+        if (isIOS) document.body.classList.add('is-ios');
+        if (isAndroid) document.body.classList.add('is-android');
+        
+        // Prevent zoom on input focus for iOS
+        if (isIOS) {
+            var inputs = document.querySelectorAll('input');
+            inputs.forEach(function(input) {
+                input.addEventListener('focus', function() {
+                    var viewport = document.querySelector('meta[name=viewport]');
+                    if (viewport) viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                });
+                input.addEventListener('blur', function() {
+                    var viewport = document.querySelector('meta[name=viewport]');
+                    if (viewport) viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
+                });
+            });
+        }
+        
+        // Enhanced click handling for TV/Android TV
+        if (isTV) {
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.classList.contains('cursor-pointer')) {
+                    e.target.click();
+                }
+            });
+        }
+    });
+})();
+</script>
+<script>
+function redeemVoucher(router_id) {
+    const voucherCode = document.getElementById('voucher_code').value;
+    if (!voucherCode) {
+        document.getElementById('message').innerText = 'Please enter a valid voucher code.';
+        return;
+    }
+
+    fetch('https://net.rayprotechsolutions.co.ke/index.php?_route=plugin/CreateHotspotuser&type=redeem_voucher', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ voucher_code: voucherCode, account_number: generateAccountNumber(), router_id: router_id })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'error') throw new Error(data.message);
+        if (data && (data.status === 'success' || data.Status === 'used')) {
+            document.getElementById('message').innerText = 'Voucher redeemed successfully.';
+            document.getElementById('usernameInput').value = data.username;
+            document.getElementById('passwordInput').value = data.tyhK;
+            setCookie('account_number', data.username, 365);
+
+            document.getElementById('submitBtn').click();
+        } else {
+            document.getElementById('message').innerText = data?.message || 'An error occurred. Please try again.';
+        }
+    })
+    .catch(error => {
+        console.error('Error redeeming voucher:', error);
+        document.getElementById('message').innerText = error.message || 'An error occurred. Please try again.';
+    });
+}
+</script>
+<script>
+function redeemMpesa() {
+    const mpesaCode = document.getElementById('mpesa_code').value.trim();
+    if (!mpesaCode) {
+        document.getElementById('mpesaMessage').innerText = 'Please enter a valid MPESA code or full message.';
+        return;
+    }
+    if (mpesaCode.length < 10) {
+        document.getElementById('mpesaMessage').innerText = 'MPESA code must be at least 10 characters.';
+        return;
+    }
+
+    fetch('https://net.rayprotechsolutions.co.ke/index.php?_route=plugin/CreateHotspotuser&type=redeem_mpesa_code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mpesa_code: mpesaCode })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'error') throw new Error(data.message);
+
+        if (data && (data.status === 'success')) {
+            document.getElementById('mpesaMessage').innerText = 'MPESA code redeemed successfully.';
+            document.getElementById('usernameInput').value = data.username;
+            document.getElementById('passwordInput').value = data.tyhK;
+            setCookie('account_number', data.username, 365);
+            document.getElementById('submitBtn').click();
+        } else {
+            document.getElementById('mpesaMessage').innerText = data?.message || 'An error occurred. Please try again.';
+        }
+    })
+    .catch(error => {
+        console.error('Error redeeming MPESA code:', error);
+        document.getElementById('mpesaMessage').innerText = error.message || 'An error occurred. Please try again.';
+    });
+}
+</script>
+</html>

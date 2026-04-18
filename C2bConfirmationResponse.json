@@ -1,0 +1,27 @@
+{
+            "TransactionType": "Pay Bill",
+            "TransID": "UBH6F6WE4C",
+            "TransTime": "20260217133500",
+            "TransAmount": "10.00",
+            "BusinessShortCode": "4124863",
+            "BillRefNumber": "Be",
+            "InvoiceNumber": "",
+            "OrgAccountBalance": "16.00",
+            "ThirdPartyTransID": "",
+            "MSISDN": "512580de09f1b7429ee067c4300437c49323ab00544bd8274d36f7d1b2825707",
+            "FirstName": "JUSTUS"
+        }
+        {
+            "TransactionType": "Pay Bill",
+            "TransID": "UBH4E7ABZ0",
+            "TransTime": "20260217203253",
+            "TransAmount": "20.00",
+            "BusinessShortCode": "4124863",
+            "BillRefNumber": "PMN-SC6J5O-254798727306",
+            "InvoiceNumber": "",
+            "OrgAccountBalance": "21.00",
+            "ThirdPartyTransID": "",
+            "MSISDN": "52b98c815e235c844e4a40dcc46ae0081caac349737a965b285d992ea5983ff7",
+            "FirstName": "Coleta"
+        }
+        

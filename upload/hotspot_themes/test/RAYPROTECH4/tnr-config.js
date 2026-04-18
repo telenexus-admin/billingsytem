@@ -1,0 +1,1 @@
+serverData = '[{"server_id" : "2072","phone1" : "01XXXXXXXXX","phone1Text" : "Support","phone2" : "","phone2Text" : "","server_host" : "login.muktowifi.com","server_host_api" : "login.muktowifi.com","payment_allow" : "mac","mobile_no_validation" : "true","allow_PC" : "true","theme" : "1","direct_login" : "false","lang" : "bn"}]';

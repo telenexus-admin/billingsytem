@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    $(if refresh-timeout)
+    <meta http-equiv="refresh" content="$(refresh-timeout-secs)">
+    $(endif)
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <title>Status | RAYPROTECH WiFi System</title>
+    <meta name="description" content="RAYPROTECH WiFi System">
+    <link rel="canonical" href="status.html">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/apple-touch-icon.png">
+    <link rel="shortcut icon" href="assets/favicon.ico">
+    <meta name="theme-color" content="#3063A0">
+    <link rel="stylesheet" href="assets/css-used.css" data-skin="default">
+
+    <style>
+        body { font-family: Arial, sans-serif; background: #f9f9f9; }
+        .auth { max-width: 600px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { font-size: 1.5rem; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        table td { padding: 8px; border-bottom: 1px solid #eee; }
+        footer { margin-top: 20px; font-size: 0.9rem; color: #555; }
+    </style>
+
+    <script src="processor.js"></script>
+</head>
+<body onload="fetchUserInfo('$(username)');">
+
+<main class="auth">
+    <header id="auth-header" class="auth-header" style="background:url(custom/banner.jpg) no-repeat center; background-size:cover; height:150px;">
+    </header>
+
+    <form class="auth-form" action="$(link-logout)" name="logout" onsubmit="return openLogout()">
+        <div id="status_block" class="text-center">
+            <h2 class="card-title">Hi, <span id="clientName">$(username)</span>!</h2>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <tr><td>Username</td><td id="subscriptionId">$(username)</td></tr>
+                    <tr><td>Expire Date</td><td id="expireDate">Loading...</td></tr>
+                    <tr><td>Remain Days</td><td id="remainDays">Loading...</td></tr>
+                    <tr><td>Data Limit</td><td id="dataLimit">Loading...</td></tr>
+                    <tr><td>Data Used</td><td id="dataUsed">Loading...</td></tr>
+                    <tr><td>IP Address</td><td>$(ip)</td></tr>
+                    <tr><td>MAC Address</td><td id="macAddress">$(mac)</td></tr>
+                    <tr><td>Connected</td><td>$(uptime)</td></tr>
+                </table>
+            </div>
+        </div>
+    </form>
+
+    <footer class="auth-footer" style="text-align:center;">
+        Developed By <a href="https://rayprotechsolutions.co.ke">RAYPROTECH</a>
+    </footer>
+</main>
+
+</body>
+</html>
+						
